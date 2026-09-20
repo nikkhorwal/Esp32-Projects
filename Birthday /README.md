@@ -1,173 +1,57 @@
-# 🎂 Heer Birthday ESP32
+# ESP32 Electronics Project
 
-A small ESP32-S3 birthday project for **Heer** combining a 0.96-inch OLED display, buzzer melody, RGB lighting, and a phone-friendly web control page.
+A small ESP32-S3 electronics setup using an OLED display, passive buzzer and RGB LED.
 
-The project is designed to play a **Happy Birthday** tune while showing synchronized lyrics on the OLED and changing the RGB lighting according to the lyric currently being played.
+## Hardware
 
-## 📸 Wiring / Hardware Setup
+- ESP32-S3 DevKitC-1
+- 0.96" I2C OLED
+- Passive buzzer
+- 4-pin RGB LED
+- 3 × 330Ω resistors
+- Breadboard and jumper wires
 
-This is the actual hardware setup used as the visual reference for this project:
+## Wiring
 
-![Heer Birthday ESP32 wiring](wiring.jpg)
+### OLED
 
-## ✨ What the project does
-
-- 🎵 Plays a Happy Birthday melody through the buzzer.
-- 🖥️ Shows **HAPPY BIRTHDAY HEER** on the OLED when idle.
-- 📝 Displays the birthday lyrics and highlights the current word while the song plays.
-- 🌈 Changes the RGB LED colour according to the current lyric.
-- 🕯️ Supports five optional candle LEDs in the current sketch.
-- 🎉 Runs a colourful party-light effect after the song finishes.
-- 📱 Provides a web page to control the birthday show from a phone.
-- 🔊 Includes a volume slider.
-- ⏹️ Includes PLAY and STOP controls.
-- 🌈 Shows a slow rainbow effect while waiting for the song to start.
-
-## 🔩 Main Components
-
-| Component | Purpose |
+| OLED | ESP32 |
 |---|---|
-| ESP32-S3 DevKitC-1 | Main controller |
-| 0.96-inch OLED | Birthday message and lyrics |
-| Passive buzzer | Happy Birthday melody |
-| 4-pin RGB LED | Colour effects synchronized with music |
-| 330Ω resistors | Current limiting for RGB channels |
-| Optional LEDs | Candle effect |
+| GND | GND |
+| VDD | 3V3 |
+| SCK / SCL | GPIO9 |
+| SDA | GPIO8 |
 
-## 🔌 Pin Mapping — Current Arduino Sketch
+### Buzzer
 
-The uploaded `.ino` file currently defines the following pins:
-
-| Device | Pin | ESP32 GPIO |
-|---|---|---:|
-| OLED | SDA | GPIO 13 |
-| OLED | SCK / SCL | GPIO 14 |
-| Buzzer | + | GPIO 7 |
-| Buzzer | − | GND |
-| RGB red channel | R | GPIO 4 |
-| RGB green channel | G | GPIO 5 |
-| RGB blue channel | B | GPIO 6 |
-
-The current sketch also contains support for five optional candle LEDs:
-
-| Candle | GPIO |
-|---|---:|
-| Candle 1 | 15 |
-| Candle 2 | 16 |
-| Candle 3 | 17 |
-| Candle 4 | 18 |
-| Candle 5 | 10 |
+| Buzzer | ESP32 |
+|---|---|
+| + | GPIO7 |
+| - | GND |
 
 ### RGB LED
 
-The sketch is configured for a **common-anode RGB LED**:
-
-- Common/anode → **3.3V**
-- Red → GPIO 4 through resistor
-- Green → GPIO 5 through resistor
-- Blue → GPIO 6 through resistor
-
-Each RGB colour channel should have its own resistor, typically **220Ω–330Ω**.
-
-Because this is common-anode, the RGB outputs are handled as active-low in the software.
-
-## 🖥️ OLED
-
-OLED connections:
-
-```text
-OLED GND  → ESP32 GND
-OLED VDD  → ESP32 3V3
-OLED SDA  → ESP32 GPIO 13
-OLED SCK  → ESP32 GPIO 14
-```
-
-The OLED is an I²C display. **SDA and SCL/SCK must use separate GPIOs.**
-
-> Note: an earlier wiring note mentioned both SDA and SCK going to GPIO9. That is not a normal two-wire I²C connection. The current uploaded sketch uses GPIO13 for SDA and GPIO14 for SCL/SCK, so the physical wiring and sketch should match.
-
-## 🔊 Buzzer
-
-```text
-Buzzer + → ESP32 GPIO 7
-Buzzer - → ESP32 GND
-```
-
-The project uses PWM/LEDC to generate the melody.
-
-The melody contains the notes of the Happy Birthday song and controls the buzzer timing without blocking the main program.
-
-## 🎶 Birthday Sequence
-
-### 1. Waiting
-
-OLED:
-
-```text
-HAPPY
-BIRTHDAY
-HEER
-```
-
-The RGB light slowly cycles through colours.
-
-### 2. Song starts
-
-The OLED changes to the lyrics:
-
-```text
-HAPPY
-BIRTHDAY
-TO YOU
-```
-
-and then:
-
-```text
-HAPPY
-BIRTHDAY
-DEAR HEER
-```
-
-The currently spoken/sung word is highlighted.
-
-### 3. RGB synchronization
-
-The RGB colour follows the lyric:
-
-| Lyric | Colour |
+| RGB Pin | Connection |
 |---|---|
-| HAPPY | Pink |
-| BIRTHDAY | Blue |
-| TO | Cyan |
-| YOU | Green |
-| DEAR | Red |
-| HEER | Magenta |
+| Pin 1 | 330Ω → GPIO4 |
+| Pin 2 | 330Ω → GPIO5 |
+| Pin 3 | 3V3 |
+| Pin 4 | 330Ω → GPIO6 |
 
-The brightness also pulses with the notes.
+Pin 3 is connected to 3V3, so the RGB LED is wired as common-anode.
+Each RGB channel uses a resistor to limit current.
 
-### 4. Song finished
+## Wiring Photo
 
-The OLED displays a final birthday message and the LEDs enter a colourful party effect.
+![ESP32 electronics wiring](wiring.jpg)
 
-After a few seconds, the display returns to the ready screen.
+---
 
-## 📱 Web Control
+# Program Details
 
-The ESP32 hosts a small web page after connecting to Wi-Fi.
+The included `.ino` sketch controls the OLED, buzzer, RGB lighting and a small phone-friendly web interface.
 
-The page provides:
-
-- ▶️ PLAY
-- ⏹️ STOP
-- 🔊 Volume control
-- Birthday-themed interface
-
-The project uses the `ESP32Base` library for the Wi-Fi/base functionality.
-
-## 📚 Required Libraries
-
-The sketch uses:
+## Main Libraries
 
 ```cpp
 #include <Arduino.h>
@@ -178,21 +62,194 @@ The sketch uses:
 #include <ESP32Base.h>
 ```
 
-Make sure these libraries are available before compiling.
+### What they do
 
-## 📁 Project Files
+- **Wire** — I2C communication with the OLED.
+- **Adafruit_GFX** — graphics/text functions for the OLED.
+- **Adafruit_SSD1306** — controls the 128×64 SSD1306 OLED.
+- **WebServer** — provides the control page and HTTP endpoints.
+- **ESP32Base** — handles the ESP32 project's Wi-Fi/base functionality.
+
+## Program Structure
+
+The sketch is divided into a few main parts:
+
+### 1. Buzzer / Music
+
+The melody is stored as note frequencies:
+
+```cpp
+const uint16_t melody[] = {
+  262, 262, 294, 262, 349, 330,
+  ...
+};
+```
+
+The program calculates the duration of each note from the tempo and note division.
+
+Important settings:
+
+```cpp
+#define TEMPO_BPM 140
+#define SOUND_PCT 70
+```
+
+`TEMPO_BPM` controls the song speed.
+
+`SOUND_PCT` makes the buzzer sound for part of each note and remain silent for the rest, which gives the melody clearer separation between notes.
+
+The buzzer uses ESP32 LEDC hardware to generate the required frequencies.
+
+## 2. OLED Display
+
+The OLED is 128×64 pixels.
+
+The program has three main screen states:
+
+- **Ready** — birthday message and cake
+- **Playing** — lyrics with the current word highlighted
+- **Done** — birthday message after the song finishes
+
+The OLED also shows a small progress bar while the song is playing.
+
+## 3. Lyrics Synchronization
+
+The lyrics are stored as two groups:
+
+```cpp
+const char* const lyrics[2][3] = {
+  { "HAPPY", "BIRTHDAY", "TO YOU" },
+  { "HAPPY", "BIRTHDAY", "DEAR HEER" }
+};
+```
+
+`lyricPos[]` maps each melody note to the word that should be highlighted.
+
+So the OLED changes the highlighted word while the melody plays.
+
+## 4. RGB Lighting
+
+The RGB LED is controlled using three ESP32 PWM outputs:
 
 ```text
-Heer_Birthday_ESP32/
+Red   → GPIO4
+Green → GPIO5
+Blue  → GPIO6
+```
+
+Because the LED is common-anode, the software uses inverted PWM logic.
+
+The program converts HSV colors into RGB values so it can smoothly change colors.
+
+During the song:
+
+- The RGB color follows the current lyric word.
+- The brightness changes with the music.
+- Higher notes receive a brightness boost.
+- Each note produces a gentle pulse.
+
+After the song, the lights enter a party/rainbow effect.
+
+## 5. Light Brightness
+
+The program has a global light level:
+
+```cpp
+uint8_t lightsPercent = 60;
+```
+
+This controls the overall RGB/candle brightness.
+
+## 6. Buzzer Controls
+
+The program has three sound-related values:
+
+```cpp
+uint8_t volumePercent = 100;
+uint8_t balancePercent = 75;
+#define SOUND_PCT 70
+```
+
+### Volume
+
+Controls overall buzzer loudness.
+
+### Note balance
+
+Passive buzzers can sound louder on higher notes. The balance calculation reduces that difference so the melody sounds more even.
+
+### Sound percentage
+
+Controls how much of each note duration actually produces sound.
+
+## 7. Web Control
+
+The ESP32 hosts a small web page that can be opened from a phone on the same Wi-Fi network.
+
+Available controls:
+
+- **PLAY**
+- **STOP**
+- **Volume**
+- **Note balance**
+- **Lights**
+
+Main HTTP endpoints:
+
+```text
+/
+ /play
+ /stop
+ /volume?v=...
+ /balance?v=...
+ /lights?v=...
+ /status
+```
+
+The `/status` endpoint returns the current playing state and slider values.
+
+## 8. Main Program Loop
+
+The ESP32 repeatedly runs:
+
+```cpp
+void loop() {
+  ESP32Base.loop();
+  server.handleClient();
+  updateSong();
+  updateIdleScreen();
+  updateLights();
+  delay(1);
+}
+```
+
+This keeps the different parts working together without blocking the ESP32 for long periods.
+
+## Pin Reference Used by the Included Sketch
+
+The currently included `.ino` file contains these pin definitions:
+
+```cpp
+#define OLED_SDA 13
+#define OLED_SCL 14
+#define BUZZER_PIN 7
+```
+
+RGB:
+
+```cpp
+GPIO4
+GPIO5
+GPIO6
+```
+
+So **check the pin definitions in the `.ino` before uploading** if your physical wiring uses different OLED pins.
+
+## Files
+
+```text
+ESP32_Electronics_Project/
 ├── README.md
 ├── wiring.jpg
 └── Heer_Birthday_ESP32_Lyrics_Music_RGB.ino
 ```
-
-## 🎁 Project Goal
-
-This is intended as a small physical birthday gift for **Heer**:
-
-**ESP32 + OLED + Buzzer + RGB lighting = a mini interactive Happy Birthday machine.** 🎂✨
-
-The idea is that pressing **PLAY** from a phone starts the complete sequence: music, lyrics, synchronized colours, and candle-style lighting effects.
