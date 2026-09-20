@@ -1,0 +1,101 @@
+{
+  "project": {
+    "name": "Heer Birthday ESP32",
+    "version": "1.0",
+    "purpose": "Happy Birthday celebration with OLED lyrics, buzzer melody and RGB lighting"
+  },
+
+  "parts": [
+    {
+      "id": "esp32",
+      "type": "ESP32-S3-DevKitC-1"
+    },
+    {
+      "id": "oled",
+      "type": "0.96 OLED I2C"
+    },
+    {
+      "id": "buzzer",
+      "type": "buzzer"
+    },
+    {
+      "id": "rgb_led",
+      "type": "4-pin RGB LED"
+    },
+    {
+      "id": "red_resistor",
+      "type": "resistor",
+      "value": "330R"
+    },
+    {
+      "id": "green_resistor",
+      "type": "resistor",
+      "value": "330R"
+    },
+    {
+      "id": "blue_resistor",
+      "type": "resistor",
+      "value": "330R"
+    }
+  ],
+
+  "connections": [
+    {
+      "from": "ESP32.GND",
+      "to": "oled.GND"
+    },
+    {
+      "from": "ESP32.3V3",
+      "to": "oled.VDD"
+    },
+    {
+      "from": "ESP32.GPIO9",
+      "to": "oled.SCK"
+    },
+    {
+      "from": "ESP32.GPIO8",
+      "to": "oled.SDA"
+    },
+
+    {
+      "from": "ESP32.GPIO7",
+      "to": "buzzer.positive"
+    },
+    {
+      "from": "buzzer.negative",
+      "to": "ESP32.GND"
+    },
+
+    {
+      "from": "ESP32.GPIO4",
+      "to": "red_resistor"
+    },
+    {
+      "from": "red_resistor",
+      "to": "rgb_led.pin1"
+    },
+
+    {
+      "from": "ESP32.GPIO5",
+      "to": "green_resistor"
+    },
+    {
+      "from": "green_resistor",
+      "to": "rgb_led.pin2"
+    },
+
+    {
+      "from": "ESP32.3V3",
+      "to": "rgb_led.pin3"
+    },
+
+    {
+      "from": "ESP32.GPIO6",
+      "to": "blue_resistor"
+    },
+    {
+      "from": "blue_resistor",
+      "to": "rgb_led.pin4"
+    }
+  ]
+}
