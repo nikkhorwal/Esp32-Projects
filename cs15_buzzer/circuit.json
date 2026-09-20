@@ -1,0 +1,72 @@
+{
+  "project": {
+    "name": "ESP32 LED Buzzer",
+    "version": "1.0"
+  },
+
+  "parts": [
+    {
+      "id": "esp32",
+      "type": "ESP32-S3-DevKitC-1"
+    },
+    {
+      "id": "red_led",
+      "type": "LED",
+      "color": "red"
+    },
+    {
+      "id": "green_led",
+      "type": "LED",
+      "color": "green"
+    },
+    {
+      "id": "red_resistor",
+      "type": "resistor",
+      "value": "330R"
+    },
+    {
+      "id": "green_resistor",
+      "type": "resistor",
+      "value": "330R"
+    },
+    {
+      "id": "buzzer",
+      "type": "buzzer"
+    }
+  ],
+
+  "connections": [
+    {
+      "from": "ESP32.GPIO16",
+      "to": "red_resistor"
+    },
+    {
+      "from": "red_resistor",
+      "to": "red_led.anode"
+    },
+    {
+      "from": "red_led.cathode",
+      "to": "GND"
+    },
+    {
+      "from": "ESP32.GPIO17",
+      "to": "green_resistor"
+    },
+    {
+      "from": "green_resistor",
+      "to": "green_led.anode"
+    },
+    {
+      "from": "green_led.cathode",
+      "to": "GND"
+    },
+    {
+      "from": "ESP32.GPIO4",
+      "to": "buzzer.positive"
+    },
+    {
+      "from": "buzzer.negative",
+      "to": "GND"
+    }
+  ]
+}
