@@ -1,0 +1,35 @@
+{
+  "project": {
+    "name": "ESP32 Drawpad",
+    "version": "1.0",
+    "purpose": "Wireless drawing pad with live phone UI and 128x64 OLED mirror"
+  },
+  "parts": [
+    {
+      "id": "esp32",
+      "type": "ESP32-S3-DevKitC-1"
+    },
+    {
+      "id": "oled",
+      "type": "0.96 OLED I2C SSD1306 128x64"
+    }
+  ],
+  "connections": [
+    {
+      "from": "ESP32.GND",
+      "to": "oled.GND"
+    },
+    {
+      "from": "ESP32.3V3",
+      "to": "oled.VCC"
+    },
+    {
+      "from": "ESP32.GPIO9",
+      "to": "oled.SCL"
+    },
+    {
+      "from": "ESP32.GPIO8",
+      "to": "oled.SDA"
+    }
+  ]
+}
